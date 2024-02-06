@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "*" ]
   pull_request:
     branches: [ "master" ]
 
@@ -29,66 +29,8 @@ jobs:
           path: MonaServer
           
     # TODO: Unit Tests don't work on mac for some reason    
-      # - name: Unit Tests
-      #  run: |
-      #    ./UnitTests -m=all
-      #    cat UnitTests.log/0.log
-      #  working-directory: UnitTests/
-
-
-  build-windows:
-      runs-on: windows-latest
-
-      steps:
-        - uses: actions/checkout@master
-        
-        - name: Setup VSC
-          uses: TheMrMilchmann/setup-msvc-dev@v3
-          with:
-            arch: x64
-
-        - name: Build
-          run: |
-            msbuild Mona.sln
-
-        - name: Upload Artifact 
-          uses: actions/upload-artifact@v4
-          with: 
-            name: MonaServer-Win
-            path: MonaServer
-
-        - name: Unit Tests
-          run: |
-            cp debug\* .
-            .\UnitTests.exe -m=all
-            cat UnitTests.log/0.log
-          working-directory: UnitTests/
-
-          
-  build-linux:
-        runs-on: ubuntu-latest
-
-        steps:
-          - uses: actions/checkout@master
-
-          - name: Install Deps
-            run: |
-              git clone https://github.com/LuaJIT/LuaJIT.git
-              cd LuaJIT
-              make -j${nproc} && sudo make install
-
-          - name: Build
-            run: |
-              make -j${nproc}
-
-          - name: Upload Artifact 
-            uses: actions/upload-artifact@v4
-            with: 
-              name: MonaServer-Linux
-              path: MonaServer
-
-          - name: Unit Tests
-            run: |
-              ./UnitTests -m=all
-              cat UnitTests.log/0.log
-            working-directory: UnitTests/
+      - name: Unit Tests
+        run: |
+          ./UnitTests -m=all
+          cat UnitTests.log/0.log
+        working-directory: UnitTests/
