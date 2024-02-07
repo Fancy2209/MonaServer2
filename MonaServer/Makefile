@@ -30,6 +30,8 @@ ifneq ($(OS),FreeBSD)
 	override LIBS+= -ldl
 endif
 ifeq ($(OS),Darwin)
+    	override LIBDIRS+=-L/opt/homebrew/opt/openssl/lib/
+	override INCLUDES+=-I/opt/homebrew/opt/openssl/lib/
 	LBITS := $(shell getconf LONG_BIT)
 	ifeq ($(LBITS),64)
 	   # just require for OSX 64 bits
