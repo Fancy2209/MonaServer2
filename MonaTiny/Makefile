@@ -12,8 +12,8 @@ EXEC?=MonaTiny
 
 # Variables extendable
 override CFLAGS+=-D_GLIBCXX_USE_C99 -std=c++14 -D__BIG_ENDIAN__=$(BIG_ENDIAN) -D_FILE_OFFSET_BITS=64 -Wall -Wno-reorder -Wno-terminate -Wunknown-pragmas -Wno-unknown-warning-option -Wno-exceptions
-override INCLUDES+=-I../MonaBase/include/ -I../MonaCore/include/ -I../ -I/usr/local/opt/openssl/include/
-override LIBDIRS+=-L../MonaBase/lib/ -L../MonaCore/lib/
+override INCLUDES+=-I../MonaBase/include/ -I../MonaCore/include/ -I../ -I/usr/local/opt/openssl/include/ -I/opt/homebrew/opt/openssl/lib/
+override LIBDIRS+=-L../MonaBase/lib/ -L../MonaCore/lib/ 
 override LDFLAGS+="-Wl,-rpath,$(CURDIR)/../MonaBase/lib/,-rpath,$(CURDIR)/../MonaCore/lib/,-rpath,/usr/local/lib/,-rpath,/usr/local/lib64/"
 override LIBS+=-pthread -lMonaBase -lMonaCore -lcrypto -lssl
 ifdef ENABLE_SRT
@@ -24,7 +24,7 @@ ifneq ($(shell ldconfig -p | grep libatomic),)
 	override LIBS += -latomic 
 endif
 ifneq ("$(wildcard /usr/local/opt/openssl/lib/)","")
-    override LIBDIRS+=-L/usr/local/opt/openssl/lib/
+    override LIBDIRS+=-L/usr/local/opt/openssl/lib/ -L/opt/homebrew/opt/openssl/lib/
 endif
 ifneq ($(OS),FreeBSD)
 	override LIBS+= -ldl
