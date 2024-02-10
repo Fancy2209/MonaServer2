@@ -31,6 +31,8 @@ jobs:
     # TODO: Unit Tests don't work on mac for some reason    
       - name: Unit Tests
         run: |
+          mkdir -p ../lib/MonaBase/
+          cp ../MonaBase/lib/libMonaBase.dylib ../lib/MonaBase/
           ./UnitTests -m=all
           cat UnitTests.log/0.log
         working-directory: UnitTests/
