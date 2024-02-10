@@ -20,7 +20,7 @@ endif
 override CFLAGS+=-D_GLIBCXX_USE_C99 -std=c++14 -D__BIG_ENDIAN__=$(BIG_ENDIAN) -D_FILE_OFFSET_BITS=64 -Wall -Wno-reorder -Wno-terminate -Wunknown-pragmas -Wno-unknown-warning-option -Wno-exceptions
 override INCLUDES+=-I../MonaBase/include/ -I../ -I/usr/local/opt/openssl/include/
 override LIBDIRS+=-L../MonaBase/lib/
-override LDFLAGS+="$(EXE_LINKER_FLAGS),../MonaBase/lib/,-rpath,/usr/local/lib/,-rpath,/usr/local/lib64/"
+override LDFLAGS+="$(EXE_LINKER_FLAGS),-rpath,../MonaBase/lib/,-rpath,/usr/local/lib/,-rpath,/usr/local/lib64/"
 override LIBS+=-pthread -lMonaBase -lcrypto -lssl
 ifdef ENABLE_SRT
 	override CFLAGS += -DENABLE_SRT
