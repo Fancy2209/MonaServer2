@@ -58,9 +58,9 @@ static const char*  LevelColors[] = { FATAL_COLOR, CRITIC_COLOR, ERROR_COLOR, WA
 
 ConsoleLogger::ConsoleLogger() {
 #if defined(_WIN32)
-	_isInteractive = _isatty(_fileno(stdout)) ? true : false;
+	_isInteractive = false;
 #else
-	_isInteractive = isatty(STDOUT_FILENO) ? true : false;
+	_isInteractive = false;
 #endif
 }
 
