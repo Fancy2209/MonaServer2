@@ -21,7 +21,7 @@ jobs:
           cp MonaBase/lib/*.dylib MonaBin/MonaBase/lib
           cp MonaCore/lib/*.dylib MonaBin/MonaCore/lib
           mkdir -p ../lib
-          cp MonaBase/lib/*.dylib ../lib
+          sudo cp MonaBase/lib/*.dylib /usr/local/lib/
           cp -r MonaServer/www MonaServer/*.pem MonaServer/MonaServer MonaTiny/MonaTiny MonaServer/MonaServer.ini MonaBin/MonaServer
 
       - name: Upload Artifact 
