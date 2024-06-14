@@ -44,6 +44,7 @@ else
 ifneq ("$(wildcard /usr/local/opt/openssl/lib/)","")
     override LIBDIRS+=-L/usr/local/opt/openssl/lib/
 endif
+endif
 
 ifneq ($(OS),FreeBSD)
 	override LIBS+= -ldl
