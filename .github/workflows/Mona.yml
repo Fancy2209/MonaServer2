@@ -36,8 +36,7 @@ jobs:
           name: MonaServer-macOS-x64
           path: MonaBin
           
-    # TODO: Unit Tests don't work on mac for some reason    
-       - name: Unit Tests
+      - name: Unit Tests
         run: |
           ./UnitTests -m=all
           cat UnitTests.log/0.log
