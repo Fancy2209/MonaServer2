@@ -16,7 +16,9 @@ jobs:
       - uses: actions/checkout@master
 
       - name: Install Deps
-        run: brew install luajit --HEAD
+        run: |
+        brew install luajit --HEAD
+        brew install openssl@1.1
 
       - name: Build
         run: |
@@ -35,11 +37,11 @@ jobs:
           path: MonaBin
           
     # TODO: Unit Tests don't work on mac for some reason    
-      # - name: Unit Tests
-      #  run: |
-      #    ./UnitTests -m=all
-      #    cat UnitTests.log/0.log
-      #  working-directory: UnitTests/
+       - name: Unit Tests
+        run: |
+          ./UnitTests -m=all
+          cat UnitTests.log/0.log
+        working-directory: UnitTests/
 
 
   build-windows:

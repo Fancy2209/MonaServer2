@@ -11,10 +11,20 @@ CXX?=g++
 
 # Variables extendable
 override CFLAGS+=-D_GLIBCXX_USE_C99 -std=c++14 -D__BIG_ENDIAN__=$(BIG_ENDIAN) -D_FILE_OFFSET_BITS=64 -Wall -Wno-reorder -Wno-terminate -Wunknown-pragmas -Wno-unknown-warning-option -Wno-exceptions 
+ifeq ($(OS),Darwin)
+override INCLUDES+=-I./include/ -I/usr/local/opt/openssl@1.1/include/
+else
 override INCLUDES+=-I./include/ -I/usr/local/opt/openssl/include/
+endif
 override LIBS+=-lcrypto -lssl
+ifeq ($(OS),Darwin)
+ifneq ("$(wildcard /usr/local/opt/openssl@1.1/lib/)","")
+	override LIBDIRS+=-L/usr/local/opt/openssl@1.1/lib/
+endif
+else
 ifneq ("$(wildcard /usr/local/opt/openssl/lib/)","")
 	override LIBDIRS+=-L/usr/local/opt/openssl/lib/
+endif
 endif
 ifdef ENABLE_SRT
 	override CFLAGS += -DENABLE_SRT

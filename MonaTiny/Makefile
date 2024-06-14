@@ -18,7 +18,13 @@ endif
 
 # Variables extendable
 override CFLAGS+=-D_GLIBCXX_USE_C99 -std=c++14 -D__BIG_ENDIAN__=$(BIG_ENDIAN) -D_FILE_OFFSET_BITS=64 -Wall -Wno-reorder -Wno-terminate -Wunknown-pragmas -Wno-unknown-warning-option -Wno-exceptions
+
+ifeq ($(OS),Darwin)
+override INCLUDES+=-I../MonaBase/include/ -I../MonaCore/include/ -I../ -I/usr/local/opt/openssl@1.1/include/
+else
 override INCLUDES+=-I../MonaBase/include/ -I../MonaCore/include/ -I../ -I/usr/local/opt/openssl/include/
+endif
+
 override LIBDIRS+=-L../MonaBase/lib/ -L../MonaCore/lib/
 override LDFLAGS+="$(EXE_LINKER_FLAGS),-rpath,../MonaBase/lib/,-rpath,../MonaCore/lib/,-rpath,/usr/local/lib/,-rpath,/usr/local/lib64/"
 override LIBS+=-pthread -lMonaBase -lMonaCore -lcrypto -lssl
@@ -29,9 +35,17 @@ endif
 ifneq ($(shell ldconfig -p | grep libatomic),)
 	override LIBS += -latomic 
 endif
+
+ifeq ($(OS),Darwin)
+ifneq ("$(wildcard /usr/local/opt/openssl@1.1/lib/)","")
+    override LIBDIRS+=-L/usr/local/opt/openssl@1.1/lib/
+endif
+else
 ifneq ("$(wildcard /usr/local/opt/openssl/lib/)","")
     override LIBDIRS+=-L/usr/local/opt/openssl/lib/
 endif
+endif
+
 ifneq ($(OS),FreeBSD)
 	override LIBS+= -ldl
 endif
