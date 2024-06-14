@@ -36,9 +36,12 @@ jobs:
           path: MonaBin
           
       - name: Unit Tests
-        run: |
-          ./UnitTests -m=all
-          cat UnitTests.log/0.log
+        run: ./UnitTests -m=all
+        working-directory: UnitTests/  
+
+      - name: Unit Tests Log
+        if: always()
+        run: cat UnitTests.log/0.log
         working-directory: UnitTests/
 
 
