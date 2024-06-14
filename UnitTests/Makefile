@@ -20,7 +20,7 @@ override INCLUDES+=-I../MonaBase/include/ -I../ -I/usr/local/opt/openssl/include
 endif
 
 override LIBDIRS+=-L../MonaBase/lib/
-override LDFLAGS+="-Wl,-rpath,$(CURDIR)/../MonaBase/lib/,-rpath,/usr/local/lib/,-rpath,/usr/local/lib64/"
+override LDFLAGS+="-Wl,-rpath,../MonaBase/lib/,-rpath,../MonaCore/lib/,-rpath,/usr/local/lib/,-rpath,/usr/local/lib64/"
 override LIBS+=-pthread -lMonaBase -lcrypto -lssl
 ifdef ENABLE_SRT
 	override CFLAGS += -DENABLE_SRT
