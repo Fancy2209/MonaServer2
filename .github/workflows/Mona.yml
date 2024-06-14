@@ -17,8 +17,8 @@ jobs:
 
       - name: Install Deps
         run: |
-        brew install luajit --HEAD
-        brew install openssl@1.1
+          brew install luajit --HEAD
+          brew install openssl@1.1
 
       - name: Build
         run: |
