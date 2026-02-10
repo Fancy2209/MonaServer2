@@ -81,6 +81,7 @@ UInt8* Crypto::Hash::Compute(const EVP_MD* evp, const void* data, size_t size, U
 	return value;
 }
 
+#if !CRYPTO_USE_EVP_MAC
 UInt8* Crypto::HMAC::Compute(const EVP_MD* evp, const void* key, int keySize, const void* data, size_t size, UInt8* value) {
 	thread_local struct CTX {
 		CTX() : _ctx(HMAC_CTX_new()) {}
@@ -94,6 +95,39 @@ UInt8* Crypto::HMAC::Compute(const EVP_MD* evp, const void* key, int keySize, co
 	HMAC_Final(&CTX, value, NULL);
 	return value;
 }
+#else
+UInt8* Crypto::HMAC::Compute(const EVP_MD* evp, const void* key, int keySize, const void* data, size_t size, UInt8* value) {
+	thread_local struct CTX {
+		CTX() {
+			m_mac = EVP_MAC_fetch(NULL, OSSL_MAC_NAME_HMAC, NULL);
+
+			OSSL_PARAM params[2];
+			size_t params_n = 0;
+
+			params[params_n++] = OSSL_PARAM_construct_utf8_string(OSSL_MAC_PARAM_DIGEST, (char *)"SHA256", 0);
+			params[params_n++] = OSSL_PARAM_construct_end();
+			m_ctx = EVP_MAC_CTX_new(m_mac);
+		}
+		~CTX() { 
+			if(m_ctx)
+				EVP_MAC_CTX_free(m_ctx);
+			m_ctx = nullptr;
+			if(m_mac)
+				EVP_MAC_free(m_mac);
+			m_mac = nullptr;
+		}
+		EVP_MAC_CTX* operator&() { return _ctx; }
+	private:
+		EVP_MAC             *m_mac { nullptr };
+		EVP_MAC_CTX         *m_ctx { nullptr };
+	} CTX;
+	EVP_MAC_init(m_ctx, key, keySize, NULL);
+	EVP_MAC_update(m_ctx, BIN data, size);
+	size_t outsize = 32;
+	EVP_MAC_final(m_ctx, value, &outsize, outsize);
+	return value;
+}
+#endif
 
 UInt16 Crypto::ComputeChecksum(BinaryReader& reader) {
 	UInt32 sum = 0;
