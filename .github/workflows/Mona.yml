@@ -46,11 +46,11 @@ jobs:
         run: |
           mkdir -p MonaBase/lib
           mkdir -p MonaCore/lib
+          cp ../MonaBase/lib/*.dylib MonaBase/lib
+          cp ../MonaCore/lib/*.dylib MonaCore/lib
           codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaBase/lib/libMonaBase.dylib
           codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaCore/lib/libMonaCore.dylib
           codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime UnitTests
-          cp ../MonaBase/lib/*.dylib MonaBase/lib
-          cp ../MonaCore/lib/*.dylib MonaCore/lib
           ./UnitTests -m=all
           cat UnitTests.log/0.log
         working-directory: UnitTests/
