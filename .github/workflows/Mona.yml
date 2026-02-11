@@ -20,8 +20,8 @@ jobs:
       - name: Build
         run: |
           make -j$(sysctl -n hw.physicalcpu)
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaBase/MonaBase.dylib
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaCore/MonaCore.dylib
+          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaBase/lib/MonaBase.dylib
+          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaCore/lib/MonaCore.dylib
           codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaServer/MonaServer
           codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaTiny/MonaTiny
           codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime UnitTests/UnitTests
@@ -66,9 +66,9 @@ jobs:
       - name: Build
         shell: arch -x86_64 bash -e {0}
         run: |
-          make -j$(sysctl -n hw.physicalcpu)
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaBase/MonaBase.dylib
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaCore/MonaCore.dylib
+          CXX="arch -x86_64 g++" make -j$(sysctl -n hw.physicalcpu)
+          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaBase/lib/MonaBase.dylib
+          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaCore/lib/MonaCore.dylib
           codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaServer/MonaServer
           codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaTiny/MonaTiny
           codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime UnitTests/UnitTests
