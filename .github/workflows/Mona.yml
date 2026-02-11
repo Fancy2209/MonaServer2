@@ -39,6 +39,8 @@ jobs:
           mkdir -p MonaCore/lib
           cp ../MonaBase/lib/*.dylib MonaBase/lib
           cp ../MonaCore/lib/*.dylib MonaCore/lib
+          codesign --force --sign - MonaBase/lib/libMonaBase.dylib
+          codesign --force --sign - MonaCore/lib/libMonaCore.dylib
           printf '<plist><dict><key>com.apple.security.cs.disable-library-validation</key><true/></dict></plist>' > valid.plist
           codesign --sign - --force --options runtime --entitlements valid.plist UnitTests
           ./UnitTests -m=all
@@ -83,6 +85,8 @@ jobs:
           mkdir -p MonaCore/lib
           cp ../MonaBase/lib/*.dylib MonaBase/lib
           cp ../MonaCore/lib/*.dylib MonaCore/lib
+          codesign --force --sign - MonaBase/lib/libMonaBase.dylib
+          codesign --force --sign - MonaCore/lib/libMonaCore.dylib
           printf '<plist><dict><key>com.apple.security.cs.disable-library-validation</key><true/></dict></plist>' > valid.plist
           codesign --sign - --force --options runtime --entitlements valid.plist UnitTests
           ./UnitTests -m=all
