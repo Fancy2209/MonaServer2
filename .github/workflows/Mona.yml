@@ -39,12 +39,10 @@ jobs:
           mkdir -p MonaCore/lib
           cp ../MonaBase/lib/*.dylib MonaBase/lib
           cp ../MonaCore/lib/*.dylib MonaCore/lib
+          export DYLD_LIBRARY_PATH=./MonaBase/lib:./MonaCore/lib:$DYLD_LIBRARY_PATH
+          export DYLD_PRINT_LIBRARIES=1
           ./UnitTests -m=all
-        working-directory: UnitTests/
-
-      - name: Show Unit Test Log
-        if: always()
-        run: cat UnitTests.log/0.log
+          cat UnitTests.log/0.log
         working-directory: UnitTests/
 
   build-macOS-x64:
@@ -83,12 +81,10 @@ jobs:
           mkdir -p MonaCore/lib
           cp ../MonaBase/lib/*.dylib MonaBase/lib
           cp ../MonaCore/lib/*.dylib MonaCore/lib
+          export DYLD_LIBRARY_PATH=./MonaBase/lib:./MonaCore/lib:$DYLD_LIBRARY_PATH
+          export DYLD_PRINT_LIBRARIES=1
           ./UnitTests -m=all
-        working-directory: UnitTests/
-
-      - name: Show Unit Test Log
-        if: always()
-        run: cat UnitTests.log/0.log
+          cat UnitTests.log/0.log
         working-directory: UnitTests/
 
   build-windows:
