@@ -55,7 +55,9 @@ jobs:
 
       - name: Install Deps
         shell: arch -x86_64 bash -e {0}
-        run: brew install luajit --HEAD
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          brew install luajit --HEAD && brew install openssl
 
       - name: Build
         shell: arch -x86_64 bash -e {0}
