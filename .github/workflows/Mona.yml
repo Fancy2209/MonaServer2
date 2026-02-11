@@ -7,7 +7,7 @@ on:
     branches: [ "master" ]
 
   workflow_dispatch:
-
+#softwareupdate --install-rosetta --agree-to-license
 jobs:
   build-macOS-arm:
     runs-on: macos-15
@@ -34,13 +34,48 @@ jobs:
           name: MonaServer-macOS-arm
           path: MonaBin
           
-    # TODO: Unit Tests don't work on mac for some reason    
-      #- name: Unit Tests
-      #  run: |
-      #    ./UnitTests -m=all
-      #    cat UnitTests.log/0.log
-      #  working-directory: UnitTests/
+      - name: Unit Tests
+        run: |
+          ./UnitTests -m=all
+          cat UnitTests.log/0.log
+        working-directory: UnitTests/
 
+  build-macOS-x64:
+    runs-on: macos-15
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Install Rosetta2
+        run: softwareupdate --install-rosetta --agree-to-license
+
+      - name: Install Deps
+        shell: arch -x86_64 zsh
+        run: brew install luajit --HEAD
+
+      - name: Build
+        shell: arch -x86_64 zsh
+        run: |
+          make -j$(sysctl -n hw.physicalcpu)
+          mkdir -p MonaBin/MonaServer
+          mkdir -p MonaBin/MonaBase/lib
+          mkdir -p MonaBin/MonaCore/lib
+          cp MonaBase/lib/*.dylib MonaBin/MonaBase/lib
+          cp MonaCore/lib/*.dylib MonaBin/MonaCore/lib
+          cp -r MonaServer/www MonaServer/*.pem MonaServer/MonaServer MonaTiny/MonaTiny MonaServer/MonaServer.ini MonaBin/MonaServer
+
+      - name: Upload Artifact 
+        uses: actions/upload-artifact@v4
+        with: 
+          name: MonaServer-macOS-x64
+          path: MonaBin
+          
+      - name: Unit Tests
+        shell: arch -x86_64 zsh
+        run: |
+          ./UnitTests -m=all
+          cat UnitTests.log/0.log
+        working-directory: UnitTests/
 
   build-windows:
       runs-on: windows-latest
