@@ -35,14 +35,14 @@ jobs:
           
       - name: Unit Tests
         run: |
-          mkdir -p MonaBase/lib
-          mkdir -p MonaCore/lib
-          cp ../MonaBase/lib/*.dylib MonaBase/lib
-          cp ../MonaCore/lib/*.dylib MonaCore/lib
+          mkdir -p MonaBase
+          mkdir -p MonaCore
+          ditto ../MonaBase/lib MonaBase/lib
+          ditto ../MonaCore/lib MonaCore/lib
           codesign --force --sign - MonaBase/lib/libMonaBase.dylib
           codesign --force --sign - MonaCore/lib/libMonaCore.dylib
           printf '<plist><dict><key>com.apple.security.cs.disable-library-validation</key><true/></dict></plist>' > valid.plist
-          codesign --sign - --force --options runtime --entitlements valid.plist UnitTests
+          codesign --sign - --force --options runtime --entitlements valid.plist --deep UnitTests
           ./UnitTests -m=all
           cat UnitTests.log/0.log
         working-directory: UnitTests/
@@ -81,14 +81,14 @@ jobs:
       - name: Unit Tests
         shell: arch -x86_64 bash -e {0}
         run: |
-          mkdir -p MonaBase/lib
-          mkdir -p MonaCore/lib
-          cp ../MonaBase/lib/*.dylib MonaBase/lib
-          cp ../MonaCore/lib/*.dylib MonaCore/lib
+          mkdir -p MonaBase
+          mkdir -p MonaCore
+          ditto ../MonaBase/lib MonaBase/lib
+          ditto ../MonaCore/lib MonaCore/lib
           codesign --force --sign - MonaBase/lib/libMonaBase.dylib
           codesign --force --sign - MonaCore/lib/libMonaCore.dylib
           printf '<plist><dict><key>com.apple.security.cs.disable-library-validation</key><true/></dict></plist>' > valid.plist
-          codesign --sign - --force --options runtime --entitlements valid.plist UnitTests
+          codesign --sign - --force --options runtime --entitlements valid.plist --deep UnitTests
           ./UnitTests -m=all
           cat UnitTests.log/0.log
         working-directory: UnitTests/
