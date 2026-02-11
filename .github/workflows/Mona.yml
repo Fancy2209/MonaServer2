@@ -40,7 +40,7 @@ jobs:
           cp ../MonaBase/lib/*.dylib MonaBase/lib
           cp ../MonaCore/lib/*.dylib MonaCore/lib
           printf '<plist><dict><key>com.apple.security.cs.disable-library-validation</key><true/></dict></plist>' > valid.plist
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime --options runtime --entitlements valid.plist UnitTests
+          codesign --sign - --force --options runtime --entitlements valid.plist UnitTests
           ./UnitTests -m=all
           cat UnitTests.log/0.log
         working-directory: UnitTests/
@@ -84,7 +84,7 @@ jobs:
           cp ../MonaBase/lib/*.dylib MonaBase/lib
           cp ../MonaCore/lib/*.dylib MonaCore/lib
           printf '<plist><dict><key>com.apple.security.cs.disable-library-validation</key><true/></dict></plist>' > valid.plist
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime --options runtime --entitlements valid.plist UnitTests
+          codesign --sign - --force --options runtime --entitlements valid.plist UnitTests
           ./UnitTests -m=all
           cat UnitTests.log/0.log
         working-directory: UnitTests/
