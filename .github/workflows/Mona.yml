@@ -70,6 +70,9 @@ jobs:
           mkdir -p MonaBin/MonaServer
           mkdir -p MonaBin/MonaBase/lib
           mkdir -p MonaBin/MonaCore/lib
+          cp MonaBase/lib/*.dylib MonaBin/MonaBase/lib
+          cp MonaCore/lib/*.dylib MonaBin/MonaCore/lib
+          cp -r MonaServer/www MonaServer/*.pem MonaServer/MonaServer MonaTiny/MonaTiny MonaServer/MonaServer.ini MonaBin/MonaServer
           cp -r MonaServer/www MonaServer/*.pem MonaServer/MonaServer MonaTiny/MonaTiny MonaServer/MonaServer.ini MonaBin/MonaServer
           
       - name: Upload Artifact 
