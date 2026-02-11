@@ -20,21 +20,12 @@ jobs:
       - name: Build
         run: |
           make -j$(sysctl -n hw.physicalcpu)
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaBase/lib/libMonaBase.dylib
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaCore/lib/libMonaCore.dylib
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaServer/MonaServer
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaTiny/MonaTiny
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime UnitTests/UnitTests
           mkdir -p MonaBin/MonaServer
           mkdir -p MonaBin/MonaBase/lib
           mkdir -p MonaBin/MonaCore/lib
           cp MonaBase/lib/*.dylib MonaBin/MonaBase/lib
           cp MonaCore/lib/*.dylib MonaBin/MonaCore/lib
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaBin/MonaBase/lib/libMonaBase.dylib
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaBin/MonaCore/lib/libMonaCore.dylib
           cp -r MonaServer/www MonaServer/*.pem MonaServer/MonaServer MonaTiny/MonaTiny MonaServer/MonaServer.ini MonaBin/MonaServer
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaServer/MonaServer
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaTiny/MonaTiny
 
       - name: Upload Artifact 
         uses: actions/upload-artifact@v4
@@ -48,9 +39,9 @@ jobs:
           mkdir -p MonaCore/lib
           cp ../MonaBase/lib/*.dylib MonaBase/lib
           cp ../MonaCore/lib/*.dylib MonaCore/lib
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaBase/lib/libMonaBase.dylib
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaCore/lib/libMonaCore.dylib
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime UnitTests
+          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime --options runtime \
+          --entitlements <(printf '<plist><dict><key>com.apple.security.cs.disable-library-validation</key><true/></dict></plist>') \
+          UnitTests
           ./UnitTests -m=all
           cat UnitTests.log/0.log
         working-directory: UnitTests/
@@ -75,20 +66,11 @@ jobs:
         run: |
           eval "$(/usr/local/bin/brew shellenv bash)"
           CXX="arch -x86_64 g++" make -j$(sysctl -n hw.physicalcpu)
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaBase/lib/libMonaBase.dylib
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaCore/lib/libMonaCore.dylib
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaServer/MonaServer
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaTiny/MonaTiny
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime UnitTests/UnitTests
           mkdir -p MonaBin/MonaServer
           mkdir -p MonaBin/MonaBase/lib
           mkdir -p MonaBin/MonaCore/lib
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaBin/MonaBase/lib/libMonaBase.dylib
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaBin/MonaCore/lib/libMonaCore.dylib
           cp -r MonaServer/www MonaServer/*.pem MonaServer/MonaServer MonaTiny/MonaTiny MonaServer/MonaServer.ini MonaBin/MonaServer
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaServer/MonaServer
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaTiny/MonaTiny
-
+          
       - name: Upload Artifact 
         uses: actions/upload-artifact@v4
         with: 
@@ -102,9 +84,9 @@ jobs:
           mkdir -p MonaCore/lib
           cp ../MonaBase/lib/*.dylib MonaBase/lib
           cp ../MonaCore/lib/*.dylib MonaCore/lib
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime UnitTests
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaBase/lib/libMonaBase.dylib
-          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaCore/lib/libMonaCore.dylib
+          codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime --options runtime \
+          --entitlements <(printf '<plist><dict><key>com.apple.security.cs.disable-library-validation</key><true/></dict></plist>') \
+          UnitTests
           ./UnitTests -m=all
           cat UnitTests.log/0.log
         working-directory: UnitTests/
