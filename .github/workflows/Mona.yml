@@ -20,6 +20,7 @@ jobs:
       - name: Build
         run: |
           make -j$(sysctl -n hw.physicalcpu)
+          codesign --sign - --force --deep --preserve-metadata=entitlements,requirements,flags,runtime .
           mkdir -p MonaBin/MonaServer
           mkdir -p MonaBin/MonaBase/lib
           mkdir -p MonaBin/MonaCore/lib
@@ -39,9 +40,6 @@ jobs:
           mkdir -p MonaCore/lib
           cp ../MonaBase/lib/*.dylib MonaBase/lib
           cp ../MonaCore/lib/*.dylib MonaCore/lib
-          codesign --remove-signature ./UnitTests || true
-          codesign --remove-signature MonaBase/lib/*.dylib || true
-          codesign --remove-signature MonaCore/lib/*.dylib || true
           ./UnitTests -m=all
           cat UnitTests.log/0.log
         working-directory: UnitTests/
@@ -65,6 +63,7 @@ jobs:
         shell: arch -x86_64 bash -e {0}
         run: |
           make -j$(sysctl -n hw.physicalcpu)
+          codesign --sign - --force --deep --preserve-metadata=entitlements,requirements,flags,runtime .
           mkdir -p MonaBin/MonaServer
           mkdir -p MonaBin/MonaBase/lib
           mkdir -p MonaBin/MonaCore/lib
