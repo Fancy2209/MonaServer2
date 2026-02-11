@@ -73,6 +73,7 @@ jobs:
       - name: Build
         shell: arch -x86_64 bash -e {0}
         run: |
+          eval "$(/usr/local/bin/brew shellenv bash)"
           CXX="arch -x86_64 g++" make -j$(sysctl -n hw.physicalcpu)
           codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaBase/lib/libMonaBase.dylib
           codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime MonaCore/lib/libMonaCore.dylib
