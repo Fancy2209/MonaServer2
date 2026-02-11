@@ -39,8 +39,9 @@ jobs:
           mkdir -p MonaCore/lib
           cp ../MonaBase/lib/*.dylib MonaBase/lib
           cp ../MonaCore/lib/*.dylib MonaCore/lib
-          export DYLD_LIBRARY_PATH=./MonaBase/lib:./MonaCore/lib:$DYLD_LIBRARY_PATH
-          export DYLD_PRINT_LIBRARIES=1
+          codesign --remove-signature ./UnitTests || true
+          codesign --remove-signature MonaBase/lib/*.dylib || true
+          codesign --remove-signature MonaCore/lib/*.dylib || true
           ./UnitTests -m=all
           cat UnitTests.log/0.log
         working-directory: UnitTests/
@@ -84,8 +85,9 @@ jobs:
           mkdir -p MonaCore/lib
           cp ../MonaBase/lib/*.dylib MonaBase/lib
           cp ../MonaCore/lib/*.dylib MonaCore/lib
-          export DYLD_LIBRARY_PATH=./MonaBase/lib:./MonaCore/lib:$DYLD_LIBRARY_PATH
-          export DYLD_PRINT_LIBRARIES=1
+          codesign --remove-signature ./UnitTests || true
+          codesign --remove-signature MonaBase/lib/*.dylib || true
+          codesign --remove-signature MonaCore/lib/*.dylib || true
           ./UnitTests -m=all
           cat UnitTests.log/0.log
         working-directory: UnitTests/
