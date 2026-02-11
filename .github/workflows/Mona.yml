@@ -5,9 +5,8 @@ on:
     branches: [ "master", "macOS-units" ]
   pull_request:
     branches: [ "master" ]
-
   workflow_dispatch:
-#softwareupdate --install-rosetta --agree-to-license
+
 jobs:
   build-macOS-arm:
     runs-on: macos-15
@@ -46,15 +45,12 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: Install Rosetta2
-        run: softwareupdate --install-rosetta --agree-to-license
-
       - name: Install Deps
-        shell: arch -x86_64 zsh
+        shell: arch -x86_64 bash
         run: brew install luajit --HEAD
 
       - name: Build
-        shell: arch -x86_64 zsh
+        shell: arch -x86_64 bash
         run: |
           make -j$(sysctl -n hw.physicalcpu)
           mkdir -p MonaBin/MonaServer
@@ -71,7 +67,7 @@ jobs:
           path: MonaBin
           
       - name: Unit Tests
-        shell: arch -x86_64 zsh
+        shell: arch -x86_64 bash
         run: |
           ./UnitTests -m=all
           cat UnitTests.log/0.log
