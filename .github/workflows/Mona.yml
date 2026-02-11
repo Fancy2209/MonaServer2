@@ -21,10 +21,9 @@ jobs:
         run: |
           make -j$(sysctl -n hw.physicalcpu)
           mkdir -p MonaBin/MonaServer
-          mkdir -p MonaBin/MonaBase/lib
-          mkdir -p MonaBin/MonaCore/lib
-          cp MonaBase/lib/*.dylib MonaBin/MonaBase/lib
-          cp MonaCore/lib/*.dylib MonaBin/MonaCore/lib
+          mkdir -p MonaBin/lib
+          cp MonaBase/lib/*.dylib MonaBin/lib
+          cp MonaCore/lib/*.dylib MonaBin/lib
           cp -r MonaServer/www MonaServer/*.pem MonaServer/MonaServer MonaTiny/MonaTiny MonaServer/MonaServer.ini MonaBin/MonaServer
 
       - name: Upload Artifact 
@@ -32,19 +31,6 @@ jobs:
         with: 
           name: MonaServer-macOS-arm
           path: MonaBin
-          
-      - name: Unit Tests
-        run: |
-          mkdir -p MonaBase
-          mkdir -p MonaCore
-          ditto ../MonaBase/lib MonaBase/lib
-          ditto ../MonaCore/lib MonaCore/lib
-          codesign --force --sign - MonaBase/lib/libMonaBase.dylib
-          codesign --force --sign - MonaCore/lib/libMonaCore.dylib
-          codesign --force --sign - UnitTests
-          ./UnitTests -m=all
-          cat UnitTests.log/0.log
-        working-directory: UnitTests/
 
   build-macOS-x64:
     runs-on: macos-15
@@ -67,11 +53,9 @@ jobs:
           eval "$(/usr/local/bin/brew shellenv bash)"
           CXX="arch -x86_64 g++" make -j$(sysctl -n hw.physicalcpu)
           mkdir -p MonaBin/MonaServer
-          mkdir -p MonaBin/MonaBase/lib
-          mkdir -p MonaBin/MonaCore/lib
-          cp MonaBase/lib/*.dylib MonaBin/MonaBase/lib
-          cp MonaCore/lib/*.dylib MonaBin/MonaCore/lib
-          cp -r MonaServer/www MonaServer/*.pem MonaServer/MonaServer MonaTiny/MonaTiny MonaServer/MonaServer.ini MonaBin/MonaServer
+          mkdir -p MonaBin/lib
+          cp MonaBase/lib/*.dylib MonaBin/lib
+          cp MonaCore/lib/*.dylib MonaBin/lib
           cp -r MonaServer/www MonaServer/*.pem MonaServer/MonaServer MonaTiny/MonaTiny MonaServer/MonaServer.ini MonaBin/MonaServer
           
       - name: Upload Artifact 
@@ -83,14 +67,12 @@ jobs:
       - name: Unit Tests
         shell: arch -x86_64 bash -e {0}
         run: |
-          mkdir -p MonaBase
-          mkdir -p MonaCore
-          ditto ../MonaBase/lib MonaBase/lib
-          ditto ../MonaCore/lib MonaCore/lib
-          codesign --force --sign - MonaBase/lib/libMonaBase.dylib
-          codesign --force --sign - MonaCore/lib/libMonaCore.dylib
-          codesign --force --sign - UnitTests
-          ./UnitTests -m=all
+          mkdir -p ../lib
+          cp ../MonaBase/lib/libMonaBase.dylib ../MonaCore/lib/libMonaCore.dylib ../lib
+          codesign --force --sign - ../lib/libMonaBase.dylib
+          codesign --force --sign - ../lib/libMonaCore.dylib
+          printf '<plist><dict><key>com.apple.security.cs.disable-library-validation</key><true/></dict></plist>' > valid.plist
+          codesign --sign - --force --options runtime --entitlements valid.plist --deep UnitTests          ./UnitTests -m=all
           cat UnitTests.log/0.log
         working-directory: UnitTests/
 
