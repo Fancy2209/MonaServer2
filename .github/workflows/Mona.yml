@@ -55,6 +55,9 @@ jobs:
         shell: arch -x86_64 bash -e {0}
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          echo >> /Users/runner/.bash_profile
+          echo 'eval "$(/usr/local/bin/brew shellenv bash)"' >> /Users/runner/.bash_profile
+          eval "$(/usr/local/bin/brew shellenv bash)"
           brew install luajit --HEAD && brew install openssl
 
       - name: Build
