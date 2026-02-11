@@ -46,11 +46,11 @@ jobs:
       - uses: actions/checkout@master
 
       - name: Install Deps
-        shell: arch -x86_64 bash
+        shell: arch -x86_64 bash -e {0}
         run: brew install luajit --HEAD
 
       - name: Build
-        shell: arch -x86_64 bash
+        shell: arch -x86_64 bash -e {0}
         run: |
           make -j$(sysctl -n hw.physicalcpu)
           mkdir -p MonaBin/MonaServer
@@ -67,7 +67,7 @@ jobs:
           path: MonaBin
           
       - name: Unit Tests
-        shell: arch -x86_64 bash
+        shell: arch -x86_64 bash -e {0}
         run: |
           ./UnitTests -m=all
           cat UnitTests.log/0.log
