@@ -35,8 +35,16 @@ jobs:
           
       - name: Unit Tests
         run: |
+          mkdir -p MonaBase/lib
+          mkdir -p MonaCore/lib
+          cp ../MonaBase/lib/*.dylib MonaBase/lib
+          cp ../MonaCore/lib/*.dylib MonaCore/lib
           ./UnitTests -m=all
-          cat UnitTests.log/0.log
+        working-directory: UnitTests/
+
+      - name: Show Unit Test Log
+        if: always()
+        run: cat UnitTests.log/0.log
         working-directory: UnitTests/
 
   build-macOS-x64:
@@ -69,8 +77,16 @@ jobs:
       - name: Unit Tests
         shell: arch -x86_64 bash -e {0}
         run: |
+          mkdir -p MonaBase/lib
+          mkdir -p MonaCore/lib
+          cp ../MonaBase/lib/*.dylib MonaBase/lib
+          cp ../MonaCore/lib/*.dylib MonaCore/lib
           ./UnitTests -m=all
-          cat UnitTests.log/0.log
+        working-directory: UnitTests/
+
+      - name: Show Unit Test Log
+        if: always()
+        run: cat UnitTests.log/0.log
         working-directory: UnitTests/
 
   build-windows:
